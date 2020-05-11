@@ -5,6 +5,7 @@ import Home from "./Home.js";
 import Menu from "./Menu.js";
 import DishDetail from "./DishDetail";
 import Contact from "./Contact";
+import About from "./About";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { DISHES } from "../shared/dishes.js";
 import { COMMENTS } from "../shared/comments";
@@ -39,6 +40,22 @@ class Main extends Component {
         />
       );
     };
+
+    const DishId = ({ match }) => {
+      return (
+        <DishDetail
+          dish={
+            this.state.dishes.filter(
+              dish => dish.id === parseInt(match.params.dishid, 10)
+            )[0]
+          }
+          comments={this.state.comments.filter(
+            comment => comment.dishId === parseInt(match.params.dishid, 10)
+          )}
+        />
+      );
+    };
+
     return (
       <div>
         <Header />
@@ -55,9 +72,14 @@ class Main extends Component {
             )}
           />
           <Route exact path="/contact" component={Contact} />
+          <Route
+            exact
+            path="/about"
+            component={() => <About leaders={this.state.leaders} />}
+          />
+          <Route path="/menu/:dishid" component={DishId} />
           <Redirect to="/home" />
         </Switch>
-        <DishDetail dish={this.state.selectedDish} />
         <Footer />
       </div>
     );

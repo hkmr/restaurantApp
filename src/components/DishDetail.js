@@ -8,8 +8,11 @@ import {
   ListGroup,
   ListGroupItem,
   ListGroupItemHeading,
-  ListGroupItemText
+  ListGroupItemText,
+  Breadcrumb,
+  BreadcrumbItem
 } from "reactstrap";
+import { Link } from "react-router-dom";
 
 function renderComments(comments) {
   return comments.map(comment => {
@@ -30,6 +33,7 @@ function renderComments(comments) {
 }
 
 export default function DishDetail(props) {
+  console.log("Dish Detail");
   const dish = props.dish;
 
   if (dish === null) {
@@ -38,7 +42,21 @@ export default function DishDetail(props) {
 
   return (
     <div className="container">
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <Link to="/home">Home</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to={"/menu"}>Menu</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+      </Breadcrumb>
       <hr />
+      <div className="row m-1">
+        <div className="col-md-5">
+          <h2>{props.dish.name}</h2>
+        </div>
+      </div>
       <div className="row m-1">
         <div className="col-md-5">
           <Card>
@@ -51,7 +69,7 @@ export default function DishDetail(props) {
         </div>
         <div className="col-md-5">
           <h1 className="display-3">Comments</h1>
-          <ListGroup flush>{renderComments(props.dish.comments)}</ListGroup>
+          <ListGroup flush>{renderComments(props.comments)}</ListGroup>
         </div>
       </div>
     </div>

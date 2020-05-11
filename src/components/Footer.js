@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  console.log("Footer");
   return (
     <div className="footer">
       <div className="container">
@@ -19,7 +20,7 @@ export default function Footer() {
                 <Link to="/menu">Menu</Link>
               </li>
               <li>
-                <Link to="/contactus">Contact Us</Link>
+                <Link to="/contact">Contact Us</Link>
               </li>
             </ul>
           </div>

@@ -25,6 +25,7 @@ class Header extends Component {
   };
 
   render() {
+    console.log("Header");
     return (
       <div>
         <Navbar className="navbar-dark" expand="md">
