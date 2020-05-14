@@ -6,20 +6,22 @@ import Menu from "./Menu.js";
 import DishDetail from "./DishDetail";
 import Contact from "./Contact";
 import About from "./About";
-import { Switch, Route, Redirect } from "react-router-dom";
-import { DISHES } from "../shared/dishes.js";
-import { COMMENTS } from "../shared/comments";
-import { PROMOTIONS } from "../shared/promotions";
-import { LEADERS } from "../shared/leaders";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+
+const mapStoreToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  };
+};
 
 class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dishes: DISHES,
-      comments: COMMENTS,
-      promotions: PROMOTIONS,
-      leaders: LEADERS,
       selectedDish: null
     };
   }
@@ -34,9 +36,9 @@ class Main extends Component {
     const HomePage = () => {
       return (
         <Home
-          dish={this.state.dishes.filter(dish => dish.featured)[0]}
-          promotion={this.state.promotions.filter(promo => promo.featured)[0]}
-          leader={this.state.leaders.filter(leader => leader.featured)[0]}
+          dish={this.props.dishes.filter(dish => dish.featured)[0]}
+          promotion={this.props.promotions.filter(promo => promo.featured)[0]}
+          leader={this.props.leaders.filter(leader => leader.featured)[0]}
         />
       );
     };
@@ -45,11 +47,11 @@ class Main extends Component {
       return (
         <DishDetail
           dish={
-            this.state.dishes.filter(
+            this.props.dishes.filter(
               dish => dish.id === parseInt(match.params.dishid, 10)
             )[0]
           }
-          comments={this.state.comments.filter(
+          comments={this.props.comments.filter(
             comment => comment.dishId === parseInt(match.params.dishid, 10)
           )}
         />
@@ -66,7 +68,7 @@ class Main extends Component {
             path="/menu"
             component={() => (
               <Menu
-                dishes={this.state.dishes}
+                dishes={this.props.dishes}
                 onClick={dish => this.onDishSelect(dish)}
               />
             )}
@@ -75,7 +77,7 @@ class Main extends Component {
           <Route
             exact
             path="/about"
-            component={() => <About leaders={this.state.leaders} />}
+            component={() => <About leaders={this.props.leaders} />}
           />
           <Route path="/menu/:dishid" component={DishId} />
           <Redirect to="/home" />
@@ -86,4 +88,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStoreToProps)(Main));
