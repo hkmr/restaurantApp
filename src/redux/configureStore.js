@@ -1,7 +1,7 @@
 import { createStore } from "redux";
-import { InitialState, Reducer } from "./reducer";
+import rootReducer from "./reducers";
 
 export const ConfigureStore = () => {
-  const store = createStore(Reducer, InitialState);
+  const store = createStore(rootReducer);
   return store;
 };

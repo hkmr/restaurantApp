@@ -28,11 +28,17 @@ const minLength = len => val => val && val.length >= len;
 
 class CommentForm extends Component {
   handleSubmit = values => {
-    alert(JSON.stringify(values));
-    console.log(JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.username,
+      values.comment
+    );
+    // console.log(JSON.stringify(values));
   };
 
   render() {
+    // console.log("ADD FORM: " + this.props.addComment);
     return (
       <div className="container">
         <ModalHeader>Add Comment</ModalHeader>
@@ -210,7 +216,10 @@ class DishDetail extends Component {
           </div>
         </div>
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <CommentForm />
+          <CommentForm
+            dishId={this.props.dish.id}
+            addComment={this.props.addComment}
+          />
         </Modal>
       </div>
     );
