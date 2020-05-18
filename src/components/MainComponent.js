@@ -8,7 +8,12 @@ import Contact from "./Contact";
 import About from "./About";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { addComment, fetchDishes } from "../redux/actions";
+import {
+  addComment,
+  fetchDishes,
+  fetchComments,
+  fetchPromos
+} from "../redux/actions";
 import { actions } from "react-redux-form";
 
 const mapStoreToProps = state => {
@@ -28,6 +33,12 @@ const mapDispatchToProps = dispatch => ({
   },
   resetFeedbackForm: () => {
     dispatch(actions.reset("feedback"));
+  },
+  fetchComments: () => {
+    dispatch(fetchComments());
+  },
+  fetchPromos: () => {
+    dispatch(fetchPromos());
   }
 });
 
@@ -41,6 +52,8 @@ class Main extends Component {
 
   componentDidMount() {
     this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
   }
 
   onDishSelect(dish) {
@@ -55,8 +68,12 @@ class Main extends Component {
         <Home
           dish={this.props.dishes.dishes.filter(dish => dish.featured)[0]}
           dishesLoading={this.props.dishes.isLoading}
-          errMsg={this.props.dishes.msg}
-          promotion={this.props.promotions.filter(promo => promo.featured)[0]}
+          dishErrMsg={this.props.dishes.errMsg}
+          promotion={
+            this.props.promotions.promotions.filter(promo => promo.featured)[0]
+          }
+          promosLoading={this.props.promotions.isLoading}
+          promosErrMsg={this.props.promotions.errMsg}
           leader={this.props.leaders.filter(leader => leader.featured)[0]}
         />
       );
@@ -72,10 +89,11 @@ class Main extends Component {
             )[0]
           }
           isLoading={this.props.dishes.isLoading}
-          errMsg={this.props.dishes.msg}
-          comments={this.props.comments.filter(
+          errMsg={this.props.dishes.errMsg}
+          comments={this.props.comments.comments.filter(
             comment => comment.dishId === parseInt(match.params.dishid, 10)
           )}
+          CommentsErrMsg={this.props.comments.errMsg}
           addComment={this.props.addComment}
         />
       );
