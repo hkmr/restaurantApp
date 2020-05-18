@@ -30,7 +30,7 @@ const minLength = len => val => val && val.length >= len;
 
 class CommentForm extends Component {
   handleSubmit = values => {
-    this.props.addComment(
+    this.props.postComment(
       this.props.dishId,
       values.rating,
       values.username,
@@ -233,7 +233,7 @@ class DishDetail extends Component {
           <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
             <CommentForm
               dishId={this.props.dish.id}
-              addComment={this.props.addComment}
+              postComment={this.props.postComment}
             />
           </Modal>
         </div>
