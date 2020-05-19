@@ -12,9 +12,11 @@ import {
   postComment,
   fetchDishes,
   fetchComments,
-  fetchPromos
+  fetchPromos,
+  fetchLeaders
 } from "../redux/actions";
 import { actions } from "react-redux-form";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const mapStoreToProps = state => {
   return {
@@ -39,6 +41,9 @@ const mapDispatchToProps = dispatch => ({
   },
   fetchPromos: () => {
     dispatch(fetchPromos());
+  },
+  fetchLeaders: () => {
+    dispatch(fetchLeaders());
   }
 });
 
@@ -54,6 +59,7 @@ class Main extends Component {
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   onDishSelect(dish) {
@@ -74,7 +80,11 @@ class Main extends Component {
           }
           promosLoading={this.props.promotions.isLoading}
           promosErrMsg={this.props.promotions.errMsg}
-          leader={this.props.leaders.filter(leader => leader.featured)[0]}
+          leaders={
+            this.props.leaders.leaders.filter(leader => leader.featured)[0]
+          }
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMsg={this.props.leaders.errMsg}
         />
       );
     };
@@ -102,33 +112,41 @@ class Main extends Component {
     return (
       <div>
         <Header />
-        <Switch>
-          <Route path="/home" component={HomePage} />
-          <Route
-            exact
-            path="/menu"
-            component={() => (
-              <Menu
-                dishes={this.props.dishes}
-                onClick={dish => this.onDishSelect(dish)}
+        <TransitionGroup>
+          <CSSTransition
+            key={this.props.location.key}
+            classNames="page"
+            timeout={3000}
+          >
+            <Switch location={this.props.location}>
+              <Route path="/home" component={HomePage} />
+              <Route
+                exact
+                path="/menu"
+                component={() => (
+                  <Menu
+                    dishes={this.props.dishes}
+                    onClick={dish => this.onDishSelect(dish)}
+                  />
+                )}
               />
-            )}
-          />
-          <Route
-            exact
-            path="/contact"
-            component={() => (
-              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
-            )}
-          />
-          <Route
-            exact
-            path="/about"
-            component={() => <About leaders={this.props.leaders} />}
-          />
-          <Route path="/menu/:dishid" component={DishId} />
-          <Redirect to="/home" />
-        </Switch>
+              <Route
+                exact
+                path="/contact"
+                component={() => (
+                  <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+                )}
+              />
+              <Route
+                exact
+                path="/about"
+                component={() => <About leaders={this.props.leaders} />}
+              />
+              <Route path="/menu/:dishid" component={DishId} />
+              <Redirect to="/home" />
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
         <Footer />
       </div>
     );

@@ -8,29 +8,39 @@ import {
   Media
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../shared/baseUrl";
+import { Loading } from "./Loading";
 
 function RenderLeader(props) {
-  return (
-    <Media as="li" className="mt-4">
-      <img
-        width={64}
-        height={64}
-        className="mr-3"
-        src={props.leader.image}
-        alt={props.leader.name}
-      />
-      <div className="media-body">
-        <h5>{props.leader.name}</h5>
-        <span className="font-weight-light">{props.leader.designation}</span>
-        <p>{props.leader.description}</p>
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <Loading />
       </div>
-    </Media>
-  );
+    );
+  } else {
+    return (
+      <Media as="li" className="mt-4">
+        <img
+          width={64}
+          height={64}
+          className="mr-3"
+          src={baseUrl + props.leader.image}
+          alt={props.leader.name}
+        />
+        <div className="media-body">
+          <h5>{props.leader.name}</h5>
+          <span className="font-weight-light">{props.leader.designation}</span>
+          <p>{props.leader.description}</p>
+        </div>
+      </Media>
+    );
+  }
 }
 
 export default function About(props) {
-  const leaders = props.leaders.map(leader => {
-    return <RenderLeader leader={leader} />;
+  const leaders = props.leaders.leaders.map(leader => {
+    return <RenderLeader leader={leader} isLoading={props.isLoading} />;
   });
 
   return (

@@ -7,7 +7,6 @@ export const addComment = comment => ({
   payload: comment
 });
 
-// THUNK
 export const fetchDishes = () => dispatch => {
   dispatch(dishesLoading(true));
 
@@ -91,6 +90,7 @@ export const addDishes = dishes => ({
   payload: dishes
 });
 
+// For Comments
 export const fetchComments = () => dispatch => {
   return fetch(baseUrl + "comments")
     .then(
@@ -125,6 +125,7 @@ export const addComments = comments => ({
   payload: comments
 });
 
+// For Promotions
 export const fetchPromos = () => dispatch => {
   dispatch(promosLoading(true));
 
@@ -163,4 +164,28 @@ export const promosFailed = errMsg => ({
 export const addPromos = promos => ({
   type: ActionTypes.ADD_PROMOS,
   payload: promos
+});
+
+// For Leaders
+
+export const fetchLeaders = () => dispatch => {
+  dispatch(leadersLoading(true));
+
+  return fetch(baseUrl + "leaders")
+    .then(response => response.json())
+    .then(leaders => dispatch(addLeaders(leaders)));
+};
+
+export const leadersLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING
+});
+
+export const leadersFailed = errMsg => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errMsg
+});
+
+export const addLeaders = leaders => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders
 });
