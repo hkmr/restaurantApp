@@ -1,5 +1,4 @@
 import * as ActionTypes from "./actionTypes";
-import { DISHES } from "../../shared/dishes";
 import { baseUrl } from "../../shared/baseUrl";
 
 export const addComment = comment => ({
@@ -19,7 +18,7 @@ export const fetchDishes = () => dispatch => {
           var error = new Error(
             "Error: " + response.status + " : " + response.statusText
           );
-          error.reponse = response;
+          error.response = response;
           throw error;
         }
       },
@@ -189,3 +188,54 @@ export const addLeaders = leaders => ({
   type: ActionTypes.ADD_LEADERS,
   payload: leaders
 });
+
+// Posting Feedback
+
+export const postFeedback = (
+  firstname,
+  lastname,
+  telnum,
+  email,
+  agree,
+  contactType,
+  message
+) => dispatch => {
+  const newFeedback = {
+    firstname: firstname,
+    lastname: lastname,
+    telnum: telnum,
+    email: email,
+    agree: agree,
+    contactType: contactType,
+    message: message
+  };
+
+  newFeedback.date = new Date().toISOString();
+
+  return fetch(baseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(newFeedback),
+    headers: {
+      "content-type": "application/json"
+    },
+    credentials: "same-origin"
+  })
+    .then(
+      response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error: " + response.status + " : " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        throw error;
+      }
+    )
+    .then(response => response.json())
+    .catch(error => console.log("Post Feedback Error: " + error));
+};
