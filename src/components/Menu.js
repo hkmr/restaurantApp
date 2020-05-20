@@ -41,11 +41,11 @@ class Menu extends Component {
           </div>
         </div>
       );
-    } else if (this.props.dishes.err) {
+    } else if (this.props.dishes.errMsg) {
       return (
         <div className="container">
           <div className="row">
-            <h4>{this.props.dishes.msg}</h4>
+            <h4>{this.props.dishes.errMsg}</h4>
           </div>
         </div>
       );

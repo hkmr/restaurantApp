@@ -168,11 +168,27 @@ export const addPromos = promos => ({
 // For Leaders
 
 export const fetchLeaders = () => dispatch => {
-  dispatch(leadersLoading(true));
-
   return fetch(baseUrl + "leaders")
+    .then(
+      response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error " + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
     .then(response => response.json())
-    .then(leaders => dispatch(addLeaders(leaders)));
+    .then(leaders => dispatch(addLeaders(leaders)))
+    .catch(error => dispatch(leadersFailed(error.message)));
 };
 
 export const leadersLoading = () => ({
@@ -233,9 +249,16 @@ export const postFeedback = (
         }
       },
       error => {
-        throw error;
+        var errmess = new Error(error.message);
+        throw errmess;
       }
     )
     .then(response => response.json())
-    .catch(error => console.log("Post Feedback Error: " + error));
+    .then(response =>
+      alert("Thank you for your feedback!" + JSON.stringify(response))
+    )
+    .catch(error => {
+      console.log("Post Feedback Error: " + error.message);
+      alert("Your feedback could not be posted\nError: " + error.message);
+    });
 };

@@ -10,39 +10,56 @@ import {
 import { Link } from "react-router-dom";
 import { baseUrl } from "../shared/baseUrl";
 import { Loading } from "./Loading";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
-function RenderLeader(props) {
-  if (props.isLoading) {
+function LeaderCard({ leader }) {
+  return (
+    <Fade in>
+      <Media key={leader.id} as="li" className="mt-4">
+        <img
+          width={64}
+          height={64}
+          className="mr-3"
+          src={baseUrl + leader.image}
+          alt={leader.name}
+        />
+        <div className="media-body">
+          <h5>{leader.name}</h5>
+          <span className="font-weight-light">{leader.designation}</span>
+          <p>{leader.description}</p>
+        </div>
+      </Media>
+    </Fade>
+  );
+}
+
+function RenderLeaders({ leaders, isLoading, errMsg }) {
+  if (isLoading) {
     return (
       <div className="container">
         <Loading />
       </div>
     );
-  } else {
+  } else if (errMsg) {
     return (
-      <Media as="li" className="mt-4">
-        <img
-          width={64}
-          height={64}
-          className="mr-3"
-          src={baseUrl + props.leader.image}
-          alt={props.leader.name}
-        />
-        <div className="media-body">
-          <h5>{props.leader.name}</h5>
-          <span className="font-weight-light">{props.leader.designation}</span>
-          <p>{props.leader.description}</p>
-        </div>
-      </Media>
+      <div className="container">
+        <h4>{errMsg}</h4>
+      </div>
     );
+  } else {
+    return leaders.map(leader => {
+      return (
+        <Stagger in>
+          <ul className="list-unstyled">
+            <LeaderCard leader={leader} />
+          </ul>
+        </Stagger>
+      );
+    });
   }
 }
 
 export default function About(props) {
-  const leaders = props.leaders.leaders.map(leader => {
-    return <RenderLeader leader={leader} isLoading={props.isLoading} />;
-  });
-
   return (
     <div className="container">
       <div className="row">
@@ -119,7 +136,11 @@ export default function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <ul className="list-unstyled">{leaders}</ul>
+          <RenderLeaders
+            leaders={props.leaders}
+            isLoading={props.leadersLoading}
+            errMsg={props.leadersErrMsg}
+          />
         </div>
       </div>
     </div>

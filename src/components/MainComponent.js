@@ -164,7 +164,13 @@ class Main extends Component {
               <Route
                 exact
                 path="/about"
-                component={() => <About leaders={this.props.leaders} />}
+                component={() => (
+                  <About
+                    leaders={this.props.leaders.leaders}
+                    leadersLoading={this.props.leaders.isLoading}
+                    leadersErrMsg={this.props.leaders.errMsg}
+                  />
+                )}
               />
               <Route path="/menu/:dishid" component={DishId} />
               <Redirect to="/home" />

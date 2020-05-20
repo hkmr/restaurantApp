@@ -23,6 +23,7 @@ import { LocalForm, Control, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
 import { Loading } from "./Loading";
 import { baseUrl } from "../shared/baseUrl";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || val.length <= len;
@@ -154,17 +155,19 @@ class DishDetail extends Component {
   renderComment = comments => {
     return comments.map(comment => {
       return (
-        <ListGroupItem key={comment.id}>
-          <ListGroupItemHeading>{comment.comment}</ListGroupItemHeading>
-          <ListGroupItemText>
-            -- {comment.author} ,
-            {new Intl.DateTimeFormat("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit"
-            }).format(new Date(Date.parse(comment.date)))}
-          </ListGroupItemText>
-        </ListGroupItem>
+        <Fade in>
+          <ListGroupItem key={comment.id}>
+            <ListGroupItemHeading>{comment.comment}</ListGroupItemHeading>
+            <ListGroupItemText>
+              -- {comment.author} ,
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit"
+              }).format(new Date(Date.parse(comment.date)))}
+            </ListGroupItemText>
+          </ListGroupItem>
+        </Fade>
       );
     });
   };
@@ -207,18 +210,25 @@ class DishDetail extends Component {
           </div>
           <div className="row m-1">
             <div className="col-md-5">
-              <Card>
-                <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-                <CardBody>
-                  <CardTitle>{dish.name}</CardTitle>
-                  <CardText>{dish.description}</CardText>
-                </CardBody>
-              </Card>
+              <FadeTransform
+                in
+                transformProps={{
+                  exitTransform: "scale(0.5) translateY(-50%)"
+                }}
+              >
+                <Card>
+                  <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                  <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                  </CardBody>
+                </Card>
+              </FadeTransform>
             </div>
             <div className="col-md-5">
               <h1 className="display-3">Comments</h1>
               <ListGroup flush>
-                {this.renderComment(this.props.comments)}
+                <Stagger in>{this.renderComment(this.props.comments)}</Stagger>
               </ListGroup>
               <Button
                 className="mt-3 mb-3"
